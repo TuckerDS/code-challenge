@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 import Express from 'express';
 import GraphHTTP from 'express-graphql';
 import bodyParser from 'body-parser';
@@ -22,6 +23,8 @@ app.use('/graphql', GraphHTTP({
   graphiql: true,
   pretty: true,
 }));
+
+app.get('/graphiql', GraphHTTP({endpointURL: 'graphiql'}));
 
 app.listen(APP_PORT, () => {
   console.log(`App listening on port ${APP_PORT}`); // eslint-disable-line no-console
