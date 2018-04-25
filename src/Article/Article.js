@@ -10,11 +10,10 @@ class Article extends Component {
     this.state = { article: props.article };
   }
 
-
   render() {
     return (
       <div className="article" id={this.state.article.id}>
-        <h3>{this.state.article.title}</h3>
+        <h2>{this.state.article.title}</h2>
         <div>{this.state.article.excerpt}</div>
         <h4>{this.state.article.author}</h4>
       </div>

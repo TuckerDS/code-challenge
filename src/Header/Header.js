@@ -6,9 +6,8 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
-
-        <h1>Billin code challenge</h1>
-        <h2>Tucker</h2>
+        <div className='logo'><img src='logotipo-billin@2x.png'/></div>
+        <div className='title'>Billin code challenge</div>
       </div>
     );
   }
