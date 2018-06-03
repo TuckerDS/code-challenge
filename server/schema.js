@@ -5,6 +5,9 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLSchema,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLInputObjectType
 } from 'graphql';
 import db from './db';
 
@@ -13,26 +16,62 @@ const articleType = new GraphQLObjectType({
   description: 'This represents a Article',
   fields: () => ({
     author: {
-      type: GraphQLString,
+      type: GraphQLString
     },
     content: {
-      type: GraphQLString,
+      type: GraphQLString
     },
     excerpt: {
-      type: GraphQLString,
+      type: GraphQLString
     },
     id: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLID)
     },
     published: {
-      type: GraphQLBoolean,
+      type: GraphQLBoolean
     },
     tags: {
-      type: new GraphQLList(GraphQLString),
+      type: new GraphQLList(GraphQLString)
     },
     title: {
-      type: GraphQLString,
+      type: GraphQLString
+    }
+  })
+});
+
+
+const articleInputType = new GraphQLInputObjectType({
+  name: 'UserInput',
+  description: 'Input user payload',
+  fields: () => ({
+    author: {
+      name: 'author',
+      type: GraphQLString
     },
+    content: {
+      name: 'content',
+      type: GraphQLString
+    },
+    excerpt: {
+      name: 'excerpt',
+      type: GraphQLString
+    },
+    id: {
+      name: 'id',
+      type: new GraphQLNonNull(GraphQLID)
+    },
+    published: {
+      name: 'content',
+      type: GraphQLBoolean
+    },
+    tags: {
+      name: 'tags',
+      type: new GraphQLList(GraphQLString)
+    },
+    title: {
+      name: 'title',
+      type: GraphQLString
+    }
   }),
 });
 
@@ -42,15 +81,49 @@ const Query = new GraphQLObjectType({
   fields: () => ({
     articles: {
       type: new GraphQLList(articleType),
-      resolve() {
+      resolve () {
         return db.Article.find();
       },
     },
+
+    article: {
+      type: articleType,
+      args: {
+        id: {
+          name: 'id',
+          type: new GraphQLNonNull(GraphQLID)
+        }
+      },
+      resolve (root, params) {
+        return db.Article.findById(params.id);
+      }
+    }
   }),
+});
+
+
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addArticle: {
+      type: articleType,
+      args: {
+        article: {
+          name: 'article',
+          type: new GraphQLNonNull(articleInputType)
+        }
+      },
+      resolve (root, params) {
+        const article = new db.Article();
+        return article.create(params.article);
+      }
+    },
+  }
 });
 
 const Schema = new GraphQLSchema({
   query: Query,
+  mutation: Mutation
 });
 
 export default Schema;

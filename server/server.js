@@ -24,7 +24,7 @@ app.use('/graphql', GraphHTTP({
   pretty: true,
 }));
 
-app.get('/graphiql', GraphHTTP({endpointURL: 'graphiql'}));
+//app.get('/graphiql', GraphHTTP({endpointURL: 'graphql'}));
 
 app.listen(APP_PORT, () => {
   console.log(`App listening on port ${APP_PORT}`); // eslint-disable-line no-console
